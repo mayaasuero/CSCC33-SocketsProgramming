@@ -10,7 +10,7 @@ public class Message {
     private String content;
     private LocalDate date;
     private LocalTime time;
-    private DateTimeFormatter formatter = DateTimeFormatter.ISO_TIME;
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public Message(String sn, String data){
         this.sender = sn;
@@ -32,8 +32,13 @@ public class Message {
     }
 
     public String getTime(){
-        this.time.format(formatter);
-        return this.time.toString();
+        return this.time.format(timeFormatter);
     }
 
+    public void printMessage(){
+        System.out.println("Time & Date: " + this.getTime() + " " + this.getDate());
+        System.out.println("From : " + this.getSender());
+        System.out.println(getContent());
+        System.out.println("--------------------------------");
+    }
 }
