@@ -5,8 +5,11 @@
  import java.util.Scanner;
 
 public class Customer {
-    private static String name;
+    private String name;
+
     public static void main(String[]args){
+        //establish connection here
+
         Scanner sc = new Scanner(System.in);
         String name = sc.next();
         int choice = 1;
