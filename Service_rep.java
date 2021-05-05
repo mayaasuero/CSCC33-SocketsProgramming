@@ -15,16 +15,15 @@ public class Service_rep {
         System.out.println("connection established");
         try {
             System.out.println("waiting for new ticket...");
-            InputStreamReader ist = new InputStreamReader(client.getInputStream());
-            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream());
+            InputStreamReader ist = new InputStreamReader(client.getInputStream(), "UTF-8");
+            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream(),"UTF-8");
             BufferedReader buffR = new BufferedReader(ist);
             BufferedWriter buffW = new BufferedWriter(ost);
-
 
             boolean isResolved = false;
             while(isResolved==false){
                 String msgClient = buffR.readLine();
-                System.out.println("Client: "+ msgClient );
+                System.out.println("Client: "+ msgClient);
                 System.out.print("Reply: ");
 
                 String responds = sc.nextLine();
@@ -46,7 +45,7 @@ public class Service_rep {
             // while loop (conversation with client until resolved)
             server.close();
             client.close();
-        } catch (UnknownHostException e) {
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

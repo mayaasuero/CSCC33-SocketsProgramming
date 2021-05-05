@@ -13,23 +13,23 @@ public class Customer {
             // establish connection here
             // connection must be opened at service_rep first
             Socket client = new Socket("localhost", 6666); 
-            OutputStream outputStream = client.getOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            //OutputStream outputStream = client.getOutputStream();
+            //ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             
-            InputStreamReader ist = new InputStreamReader(client.getInputStream());
-            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream());
+            InputStreamReader ist = new InputStreamReader(client.getInputStream(),"UTF-8");
+            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream(),"UTF-8");
             BufferedReader buffR = new BufferedReader(ist);
             BufferedWriter buffW = new BufferedWriter(ost);
             // Ticket ticket = new Ticket(1, "Maya", "sample");
             System.out.println("connection established");
             Scanner sc = new Scanner(System.in);
-            System.out.println("Name: ");
-            String name = sc.next();
+            //System.out.println("Name: ");
+            //String name = sc.next();
             int choice = 1;
             while(choice != 0){
                 menu();
                 choice = sc.nextInt();
-                sc.next();
+                sc.nextLine();
                 switch(choice){
                     case 1: // new ticket
                         
@@ -37,14 +37,13 @@ public class Customer {
                         while(isResolved==false){
                             //Ticket openTicket = createTicket(sc,name);
                             //objectOutputStream.writeObject(openTicket);
+                            System.out.print("You: ");
                             String msg = sc.nextLine();
-                            buffW.write(msg);
+                            buffW.write(msg.toString());
                             buffW.newLine();
                             buffW.flush();
 
-                            System.out.println("Helpdesk: "+ buffR.readLine());
-                            System.out.print("You: ");
-
+                            System.out.println("Helpdesk: "+ buffR.readLine());                            
                             if(msg.equalsIgnoreCase("RESOLVED")){
                                 isResolved=true;
                             }
@@ -57,10 +56,10 @@ public class Customer {
             System.out.println("Logging out...");
 
             client.close();
-        } catch (UnknownHostException e) {
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
+        } 
     }
 
 
