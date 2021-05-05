@@ -16,19 +16,40 @@ public class Customer {
             OutputStream outputStream = client.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             
+            InputStreamReader ist = new InputStreamReader(client.getInputStream());
+            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream());
+            BufferedReader buffR = new BufferedReader(ist);
+            BufferedWriter buffW = new BufferedWriter(ost);
             // Ticket ticket = new Ticket(1, "Maya", "sample");
-
+            System.out.println("connection established");
             Scanner sc = new Scanner(System.in);
+            System.out.println("Name: ");
             String name = sc.next();
             int choice = 1;
             while(choice != 0){
                 menu();
                 choice = sc.nextInt();
-    
+                sc.next();
                 switch(choice){
                     case 1: // new ticket
-                        Ticket openTicket = createTicket(sc,name);
-                        objectOutputStream.writeObject(openTicket);
+                        
+                        boolean isResolved = false;
+                        while(isResolved==false){
+                            //Ticket openTicket = createTicket(sc,name);
+                            //objectOutputStream.writeObject(openTicket);
+                            String msg = sc.nextLine();
+                            buffW.write(msg);
+                            buffW.newLine();
+                            buffW.flush();
+
+                            System.out.println("Helpdesk: "+ buffR.readLine());
+                            System.out.print("You: ");
+
+                            if(msg.equalsIgnoreCase("RESOLVED")){
+                                isResolved=true;
+                            }
+                        }
+                        
                     case 2: // view ticket
     
                 }

@@ -5,19 +5,45 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 public class Service_rep {
     public static void main(String[]args) throws IOException, ClassNotFoundException{
+        Scanner sc = new Scanner(System.in);
+        
+        // establish connection here
+        // this must be opened first to accept client
+        ServerSocket server = new ServerSocket(6666);
+        System.out.println("waiting for connection...");
+        Socket client = server.accept();
+        System.out.println("connection established");
         try {
-            // establish connection here
-            // this must be opened first to accept client
-            ServerSocket server = new ServerSocket(6666);
-            Socket client = server.accept();
-            System.out.println("connection established");
+            System.out.println("waiting for new ticket...");
+            InputStreamReader ist = new InputStreamReader(client.getInputStream());
+            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream());
+            BufferedReader buffR = new BufferedReader(ist);
+            BufferedWriter buffW = new BufferedWriter(ost);
 
-            InputStream inputStream = client.getInputStream();
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 
-            Ticket newTicket = (Ticket)objectInputStream.readObject();
-            newTicket.viewTicket();
+            boolean isResolved = false;
+            while(isResolved==false){
+                String msgClient = buffR.readLine();
+                System.out.println("Client: "+ msgClient );
+                System.out.print("Reply: ");
 
+                String responds = sc.nextLine();
+                buffW.write(responds);
+                buffW.newLine();
+                buffW.flush();
+
+                if(msgClient.equalsIgnoreCase("RESOLVED")){
+                    isResolved=true;
+                }
+
+            }
+            //While(server is up)
+            //InputStream inputStream = client.getInputStream();
+            //ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            
+            //Ticket newTicket = (Ticket)objectInputStream.readObject();
+            //newTicket.viewTicket();
+            // while loop (conversation with client until resolved)
             server.close();
             client.close();
         } catch (UnknownHostException e) {
@@ -54,7 +80,7 @@ public class Service_rep {
     }
 
     private static void checkTickets(){
-
+        //check list of tickets
     }
 
     private static void respond(){
