@@ -25,13 +25,13 @@ public class Ticket implements Serializable{
     }
 
     public void viewTicket(){
-        System.out.println("#"+this.ticket_number);
-        System.out.println("Client: "+this.client_name);
-        System.out.println("Topic: "+this.topic);
+        System.out.println("  Ticket #: "+this.ticket_number);
+        System.out.println("  Client: "+this.client_name);
+        System.out.println("  Topic: "+this.topic);
         if(this.isResolved == true){
-            System.out.println("Status: Closed");
+            System.out.println("  Status: Closed");
         } else{
-            System.out.println("Status: Open");
+            System.out.println("  Status: Open");
         }
     }
 
@@ -41,5 +41,9 @@ public class Ticket implements Serializable{
 
     public void appendMessage(Message msg){
         conversation.add(msg);
+    }
+
+    public Boolean getTicketStatus(){
+        return this.isResolved;
     }
 }

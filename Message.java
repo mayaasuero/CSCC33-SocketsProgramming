@@ -4,13 +4,13 @@
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.io.Serializable;
 
-public class Message {
+public class Message implements Serializable{
     private String sender;
     private String content;
     private LocalDate date;
     private LocalTime time;
-    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public Message(String sn, String data){
         this.sender = sn;
@@ -27,18 +27,12 @@ public class Message {
         return this.content;
     }
 
-    public String getDate(){
-        return this.date.toString();
-    }
-
-    public String getTime(){
-        return this.time.format(timeFormatter);
-    }
-
     public void printMessage(){
-        System.out.println("Time & Date: " + this.getTime() + " " + this.getDate());
-        System.out.println("From : " + this.getSender());
-        System.out.println(getContent());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
+        System.out.println(this.time.format(formatter));
         System.out.println("--------------------------------");
+        System.out.println("Time & Date: " + this.time.format(formatter).toString() + " " + this.date.toString());
+        System.out.println("From : " + this.getSender());
+        System.out.println("Message: " + getContent());
     }
 }

@@ -8,23 +8,37 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Customer {
-    public static void main(String[]args) throws IOException{
+    public static void main(String[]args) throws IOException, ClassNotFoundException{
         try {
             // establish connection here
             // connection must be opened at service_rep first
             Socket client = new Socket("localhost", 6666); 
-            //OutputStream outputStream = client.getOutputStream();
-            //ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+
+
+            /**
+             * for objects
+             */
+            OutputStream outputStream = client.getOutputStream();
+            InputStream inputStream = client.getInputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+
             
-            InputStreamReader ist = new InputStreamReader(client.getInputStream(),"UTF-8");
-            OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream(),"UTF-8");
-            BufferedReader buffR = new BufferedReader(ist);
-            BufferedWriter buffW = new BufferedWriter(ost);
-            // Ticket ticket = new Ticket(1, "Maya", "sample");
-            System.out.println("connection established");
+            /**
+             * for basic text
+             */
+            // InputStreamReader ist = new InputStreamReader(client.getInputStream(),"UTF-8");
+            // OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream(),"UTF-8");
+            // BufferedReader buffR = new BufferedReader(ist);
+            // BufferedWriter buffW = new BufferedWriter(ost);
+
+            System.out.println("connection established\n");
             Scanner sc = new Scanner(System.in);
-            //System.out.println("Name: ");
-            //String name = sc.next();
+            
+            System.out.print("Name: ");
+            String name = sc.nextLine();
+
+
             int choice = 1;
             while(choice != 0){
                 menu();
@@ -34,21 +48,28 @@ public class Customer {
                     case 1: // new ticket
                         
                         boolean isResolved = false;
-                        while(isResolved==false){
-                            //Ticket openTicket = createTicket(sc,name);
-                            //objectOutputStream.writeObject(openTicket);
-                            System.out.print("You: ");
-                            String msg = sc.nextLine();
-                            buffW.write(msg.toString());
-                            buffW.newLine();
-                            buffW.flush();
+                        Ticket openTicket = createTicket(sc,name);
+                        objectOutputStream.writeObject(openTicket);
 
-                            System.out.println("Helpdesk: "+ buffR.readLine());                            
-                            if(msg.equalsIgnoreCase("RESOLVED")){
-                                isResolved=true;
+                        while(openTicket.getTicketStatus() == false){
+                            System.out.print("\nYou: ");
+                            String content = sc.nextLine();
+                            Message msg = new Message(name, content);
+                            objectOutputStream.writeObject(msg);
+
+                            // from client
+                            Message fromClient = (Message) objectInputStream.readObject();
+                            fromClient.printMessage();
+                            // buffW.write(msg.toString());
+                            // buffW.newLine();
+                            // buffW.flush();
+
+                            // System.out.println("Helpdesk: "+ buffR.readLine());                            
+                            if(content.equalsIgnoreCase("RESOLVED")){
+                                openTicket.resolveTicket();
                             }
                         }
-                        
+                        break;
                     case 2: // view ticket
     
                 }
@@ -75,10 +96,10 @@ public class Customer {
     private static Ticket createTicket(Scanner sc, String name){
         System.out.print("Topic: ");
         String topic = sc.nextLine();
-        System.out.print("Description: ");
-        String message = sc.nextLine();
+        // System.out.print("Description: ");
+        // String message = sc.nextLine();
 
-        Message issue = new Message(name, message);
+        // Message issue = new Message(name, message);
         Ticket ticket = new Ticket(1,name,topic);
         return ticket;
     }
