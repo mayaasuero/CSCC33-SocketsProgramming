@@ -76,8 +76,8 @@ public class Customer {
                                 //
                             }
 
-                            Message fromClient = (Message) objectInputStream.readObject();
-                            fromClient.printMessage();
+                            Message fromServer = (Message) objectInputStream.readObject();
+                            fromServer.printMessage();
                         }
                         break;
                     case 2: // view ticket
@@ -104,16 +104,8 @@ public class Customer {
     private static Ticket createTicket(Scanner sc, String name){
         System.out.print("Topic: ");
         String topic = sc.nextLine();
-        Ticket ticket = new Ticket(1,name,topic);
+        Ticket ticket = new Ticket(name,topic);
         return ticket;
-    }
-    
-    private static void respond(Scanner sc, Ticket ticket, String name){
-        System.out.print("Description: ");
-        String message = sc.nextLine();
-
-        Message issue = new Message(name, message);
-        ticket.appendMessage(issue);
     }
 
     private static void viewTicket(){

@@ -3,8 +3,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.LinkedList;
 public class Service_rep {
     public static void main(String[]args) throws IOException, ClassNotFoundException{
+        LinkedList<Ticket> tickets  = new LinkedList<Ticket>();
         Scanner sc = new Scanner(System.in);
         
         // establish connection here
@@ -39,6 +41,8 @@ public class Service_rep {
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
         
                         Ticket currentTicket = (Ticket) objectInputStream.readObject();
+                        currentTicket.assignTNumber(tickets.size()+1);
+                        tickets.add(currentTicket);
                         System.out.println("\nNew ticket received");
                         currentTicket.viewTicket();
         
@@ -57,58 +61,20 @@ public class Service_rep {
                             System.out.print("\nYou: ");
                             String response = sc.nextLine();
                             Message toClient = new Message(name, response);
-                            objectOutputStream.writeObject(toClient);
-        
-                            // String msgClient = buffR.readLine();
-                            // System.out.println("Client: "+ msgClient);
-                            // System.out.print("Reply: ");
-        
-                            // String responds = sc.nextLine();
-                            // buffW.write(responds);
-                            // buffW.newLine();
-                            // buffW.flush();
-        
-                            
-        
+                            objectOutputStream.writeObject(toClient);        
                         }
-                        //While(server is up)
-        
-                        
-                        //Ticket newTicket = (Ticket)objectInputStream.readObject();
-                        //newTicket.viewTicket();
-                        // while loop (conversation with client until resolved)
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
+                    break;
+                case 2: // view tickets;
+                    checkTickets(tickets);
                 default:
                     break;
             }
         }
-        
-        // while(a == 1){
-            
-        //     a = sc.nextInt();
-        // }
         server.close();
-
-
-
-        // Scanner sc = new Scanner(System.in);
-        // String name = sc.next();
-        // int choice = 1;
-        // while(choice != 0){
-        //     menu();
-        //     choice = sc.nextInt();
-
-        //     switch(choice){
-        //         case 1: // new ticket
-                    
-        //         case 2: // view ticket
-
-        //     }
-        // }
-
         System.out.println("Logging out...");
     }
     
@@ -117,20 +83,18 @@ public class Service_rep {
         System.out.println("Menu");
         System.out.println("[0] Quit");
         System.out.println("[1] Accept tickets");
-        // System.out.println("[2] View a ticket");
+        System.out.println("[2] View previous ticket");
         System.out.print("\nChoice: ");
     }
 
-    private static void checkTickets(){
-        //check list of tickets
+    private static void checkTickets(LinkedList<Ticket> tickets){
+        System.out.println("--------------------------------");
+        System.out.println("Resolve tickets: " + tickets.size());
+        for(int i = 0; i < tickets.size(); i++){
+            Ticket oldTicket = tickets.get(i);
+            System.out.println("  ------------------------------");
+            oldTicket.viewTicket();
+        }
+
     }
-
-    private static void respond(){
-
-    }
-
-    private static void closeTicket(){
-
-    }
-
 }

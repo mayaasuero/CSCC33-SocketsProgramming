@@ -11,17 +11,19 @@ public class Ticket implements Serializable{
     private String rep_name;
     private String topic;
     private boolean isResolved;
-    private LinkedList<Message> conversation;
 
-    public Ticket(int tn, String cn, String t){
-        this.ticket_number = tn;
+    public Ticket(String cn, String t){
+        this.ticket_number = 0;
         this.client_name = cn;
         this.rep_name = "";
         this.topic = t;
 
         // default 
         this.isResolved = false;
-        this.conversation = new LinkedList<Message>();
+    }
+
+    public void assignTNumber(int i){
+        this.ticket_number = i;
     }
 
     public void viewTicket(){
@@ -37,10 +39,6 @@ public class Ticket implements Serializable{
 
     public void resolveTicket(){
         this.isResolved = true;        
-    }
-
-    public void appendMessage(Message msg){
-        conversation.add(msg);
     }
 
     public Boolean getTicketStatus(){
