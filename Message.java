@@ -29,7 +29,6 @@ public class Message implements Serializable{
 
     public void printMessage(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
-        System.out.println(this.time.format(formatter));
         System.out.println("--------------------------------");
         System.out.println("Time & Date: " + this.time.format(formatter).toString() + " " + this.date.toString());
         System.out.println("From : " + this.getSender());

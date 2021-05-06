@@ -13,76 +13,81 @@ public class Service_rep {
 
         System.out.print("Name: ");
         String name = sc.nextLine();
+        int choice = 1;
 
-        int a = 1;
-        while(a == 1){
-            System.out.println("waiting for connection...");
-            Socket client = server.accept();
-            System.out.println("connection established\n");
-            try {
-                System.out.println("waiting for new ticket...");
-
-                /**
-                 * initialize input & output
-                 * for basic text
-                 */
-                // InputStreamReader ist = new InputStreamReader(client.getInputStream(), "UTF-8");
-                // OutputStreamWriter ost = new OutputStreamWriter(client.getOutputStream(),"UTF-8");
-                // BufferedReader buffR = new BufferedReader(ist);
-                // BufferedWriter buffW = new BufferedWriter(ost);
-
-                /**
-                 * initialize input & output
-                 * for objects
-                 */
-                InputStream inputStream = client.getInputStream();
-                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                OutputStream outputStream = client.getOutputStream();
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-
-                Ticket currentTicket = (Ticket) objectInputStream.readObject();
-                System.out.println("\nNew ticket received");
-                currentTicket.viewTicket();
-
-                while(currentTicket.getTicketStatus() == false){
-
-                    // from client
-                    Message fromClient = (Message) objectInputStream.readObject();
-                    fromClient.printMessage();
-
-                    // response to client
-                    System.out.print("\nYou: ");
-                    String response = sc.nextLine();
-                    Message toClient = new Message(name, response);
-                    objectOutputStream.writeObject(toClient);
-
-                    // String msgClient = buffR.readLine();
-                    // System.out.println("Client: "+ msgClient);
-                    // System.out.print("Reply: ");
-
-                    // String responds = sc.nextLine();
-                    // buffW.write(responds);
-                    // buffW.newLine();
-                    // buffW.flush();
-
-                    if(fromClient.getContent().equalsIgnoreCase("RESOLVED")){
-                        currentTicket.resolveTicket();
+        while(choice != 0){
+            menu();
+            choice = sc.nextInt();
+            sc.nextLine();
+            switch(choice){
+                case 0: // exit
+                    break;
+                case 1:  // accept tickets
+                    System.out.println("waiting for connection...");
+                    Socket client = server.accept();
+                    System.out.println("connection established\n");
+                    try {
+                        System.out.println("waiting for new ticket...");
+        
+                        /**
+                         * initialize input & output
+                         * for objects
+                         */
+                        InputStream inputStream = client.getInputStream();
+                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                        OutputStream outputStream = client.getOutputStream();
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        
+                        Ticket currentTicket = (Ticket) objectInputStream.readObject();
+                        System.out.println("\nNew ticket received");
+                        currentTicket.viewTicket();
+        
+                        while(currentTicket.getTicketStatus() == false){
+        
+                            // from client
+                            Message fromClient = (Message) objectInputStream.readObject();
+                            fromClient.printMessage();
+        
+                            // response to client
+                            System.out.print("\nYou: ");
+                            String response = sc.nextLine();
+                            Message toClient = new Message(name, response);
+                            objectOutputStream.writeObject(toClient);
+        
+                            // String msgClient = buffR.readLine();
+                            // System.out.println("Client: "+ msgClient);
+                            // System.out.print("Reply: ");
+        
+                            // String responds = sc.nextLine();
+                            // buffW.write(responds);
+                            // buffW.newLine();
+                            // buffW.flush();
+        
+                            if(fromClient.getContent().equalsIgnoreCase("RESOLVED")){
+                                currentTicket.resolveTicket();
+                                client.close();
+                            }
+        
+                        }
+                        //While(server is up)
+        
+                        
+                        //Ticket newTicket = (Ticket)objectInputStream.readObject();
+                        //newTicket.viewTicket();
+                        // while loop (conversation with client until resolved)
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-
-                }
-                //While(server is up)
-
-                
-                //Ticket newTicket = (Ticket)objectInputStream.readObject();
-                //newTicket.viewTicket();
-                // while loop (conversation with client until resolved)
-                // client.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                default:
+                    break;
             }
-            a = sc.nextInt();
         }
+        
+        // while(a == 1){
+            
+        //     a = sc.nextInt();
+        // }
         server.close();
 
 
@@ -109,8 +114,8 @@ public class Service_rep {
         System.out.println("--------------------------------");
         System.out.println("Menu");
         System.out.println("[0] Quit");
-        System.out.println("[1] List tickets");
-        System.out.println("[2] View a ticket");
+        System.out.println("[1] Accept tickets");
+        // System.out.println("[2] View a ticket");
         System.out.print("\nChoice: ");
     }
 

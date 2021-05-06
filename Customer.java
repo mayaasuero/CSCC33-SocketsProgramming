@@ -3,7 +3,7 @@
  */
 
 import java.io.*;
-import java.net.Socket;
+import java.net.*;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -11,18 +11,6 @@ public class Customer {
     public static void main(String[]args) throws IOException, ClassNotFoundException{
         try {
             // establish connection here
-            // connection must be opened at service_rep first
-            Socket client = new Socket("localhost", 6666); 
-
-
-            /**
-             * for objects
-             */
-            OutputStream outputStream = client.getOutputStream();
-            InputStream inputStream = client.getInputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-
             
             /**
              * for basic text
@@ -32,7 +20,6 @@ public class Customer {
             // BufferedReader buffR = new BufferedReader(ist);
             // BufferedWriter buffW = new BufferedWriter(ost);
 
-            System.out.println("connection established\n");
             Scanner sc = new Scanner(System.in);
             
             System.out.print("Name: ");
@@ -45,9 +32,27 @@ public class Customer {
                 choice = sc.nextInt();
                 sc.nextLine();
                 switch(choice){
+                    case 0: //exit
+                        break;
                     case 1: // new ticket
+
+                        // connection must be opened at service_rep first
+                        System.out.println("Connecting to server...");
+                        Socket client = new Socket("localhost", 6666); 
+            
+            
+                        /**
+                         * for objects
+                         */
+                        OutputStream outputStream = client.getOutputStream();
+                        InputStream inputStream = client.getInputStream();
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);        
+
+                        System.out.println("connection established\n");
+
                         
-                        boolean isResolved = false;
+                        // boolean isResolved = false;
                         Ticket openTicket = createTicket(sc,name);
                         objectOutputStream.writeObject(openTicket);
 
@@ -67,6 +72,7 @@ public class Customer {
                             // System.out.println("Helpdesk: "+ buffR.readLine());                            
                             if(content.equalsIgnoreCase("RESOLVED")){
                                 openTicket.resolveTicket();
+                                client.close();
                             }
                         }
                         break;
@@ -76,10 +82,8 @@ public class Customer {
             }
             System.out.println("Logging out...");
 
-            client.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (SocketException se) {
+            System.out.println("Error. Connection to server was closed.");
         } 
     }
 
@@ -89,17 +93,13 @@ public class Customer {
         System.out.println("Menu");
         System.out.println("[0] Quit");
         System.out.println("[1] New ticket");
-        System.out.println("[2] View tickets");
+        // System.out.println("[2] View tickets");
         System.out.print("\nChoice: ");
     }
 
     private static Ticket createTicket(Scanner sc, String name){
         System.out.print("Topic: ");
         String topic = sc.nextLine();
-        // System.out.print("Description: ");
-        // String message = sc.nextLine();
-
-        // Message issue = new Message(name, message);
         Ticket ticket = new Ticket(1,name,topic);
         return ticket;
     }
