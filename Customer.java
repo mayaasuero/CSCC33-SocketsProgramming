@@ -63,8 +63,7 @@ public class Customer {
                             objectOutputStream.writeObject(msg);
 
                             // from client
-                            Message fromClient = (Message) objectInputStream.readObject();
-                            fromClient.printMessage();
+                            
                             // buffW.write(msg.toString());
                             // buffW.newLine();
                             // buffW.flush();
@@ -73,7 +72,12 @@ public class Customer {
                             if(content.equalsIgnoreCase("RESOLVED")){
                                 openTicket.resolveTicket();
                                 client.close();
+                                break;
+                                //
                             }
+
+                            Message fromClient = (Message) objectInputStream.readObject();
+                            fromClient.printMessage();
                         }
                         break;
                     case 2: // view ticket

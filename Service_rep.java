@@ -46,6 +46,11 @@ public class Service_rep {
         
                             // from client
                             Message fromClient = (Message) objectInputStream.readObject();
+                            if(fromClient.getContent().equalsIgnoreCase("RESOLVED")){
+                                currentTicket.resolveTicket();
+                                client.close();
+                                break;
+                            }
                             fromClient.printMessage();
         
                             // response to client
@@ -63,10 +68,7 @@ public class Service_rep {
                             // buffW.newLine();
                             // buffW.flush();
         
-                            if(fromClient.getContent().equalsIgnoreCase("RESOLVED")){
-                                currentTicket.resolveTicket();
-                                client.close();
-                            }
+                            
         
                         }
                         //While(server is up)
