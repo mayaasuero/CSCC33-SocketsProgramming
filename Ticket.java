@@ -8,14 +8,12 @@ import java.io.Serializable;
 public class Ticket implements Serializable{
     private int ticket_number;
     private String client_name;
-    private String rep_name;
     private String topic;
     private boolean isResolved;
 
     public Ticket(String cn, String t){
         this.ticket_number = 0;
         this.client_name = cn;
-        this.rep_name = "";
         this.topic = t;
 
         // default 
@@ -43,5 +41,9 @@ public class Ticket implements Serializable{
 
     public Boolean getTicketStatus(){
         return this.isResolved;
+    }
+
+    public String getClientName(){
+        return this.client_name;
     }
 }
